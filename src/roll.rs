@@ -25,6 +25,8 @@ pub struct RollMetadata {
     pub tags: Vec<String>,
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub frames: Vec<FrameNote>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub scan: Option<ScanMetadata>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -239,6 +241,7 @@ mod tests {
             shot_date_range: String::new(),
             notes: "Test notes".to_string(),
             tags: vec!["juniper".to_string(), "nyc".to_string()],
+            scan: None,
             frames: vec![FrameNote {
                 id: "f01".to_string(),
                 notes: "great light".to_string(),

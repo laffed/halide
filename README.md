@@ -37,8 +37,7 @@ Film/
 │       │   ├── exports/
 │       │   ├── contact_sheet/
 │       │   ├── metadata/
-│       │   │   ├── roll.toml       ← source of truth
-│       │   │   └── scan.toml       ← scanner provenance
+│       │   │   └── roll.toml       ← source of truth
 │       │   └── notes.md
 │       └── 2026-05-13_02_TriX@800/
 ├── Exports/
@@ -83,7 +82,7 @@ Or run without arguments to be prompted for the source directory:
 halide ingest
 ```
 
-Shows all rolls sorted by empty first, non-empty at the bottom. Moves TIFF files into `raw_scans/` and renames them to the canonical frame format. Writes `metadata/scan.toml` with scanner provenance. Handles cross-filesystem moves.
+Shows all rolls sorted by empty first, non-empty at the bottom. Moves TIFF files into `raw_scans/` and renames them to the canonical frame format. Writes scanner provenance into `roll.toml`. Handles cross-filesystem moves.
 
 ### 3. Add metadata and notes
 
@@ -117,6 +116,14 @@ shot_date_range = "2026-03 → 2026-04"
 notes = "Juniper first day of school. NYC trip."
 tags = ["juniper", "nyc"]
 
+[scan]
+scanner = "Coolscan 5000"
+scan_software = "VueScan"
+dpi = 4000
+bit_depth = 16
+infrared_cleaning = true
+multi_sampling = false
+
 [[frames]]
 id = "f01"
 notes = "slightly underexposed"
@@ -124,17 +131,6 @@ notes = "slightly underexposed"
 [[frames]]
 id = "f12"
 notes = "strong — print this one"
-```
-
-`metadata/scan.toml`:
-
-```toml
-scanner = "Coolscan 5000"
-scan_software = "VueScan"
-dpi = 4000
-bit_depth = 16
-infrared_cleaning = true
-multi_sampling = false
 ```
 
 ## Config

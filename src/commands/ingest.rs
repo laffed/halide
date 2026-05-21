@@ -69,9 +69,9 @@ pub fn run(source: Option<String>) -> Result<()> {
         }
     }
 
-    let meta = RollMetadata::load(&target_roll)?;
-    let uid = &meta.uid;
-    let start_frame = roll::next_frame_number(&target_roll, uid);
+    let mut meta = RollMetadata::load(&target_roll)?;
+    let uid = meta.uid.clone();
+    let start_frame = roll::next_frame_number(&target_roll, &uid);
     let raw_scans_dir = target_roll.join("raw_scans");
 
     println!("\nIngesting {} file(s) starting at f{:02}...", tiffs.len(), start_frame);
@@ -95,18 +95,15 @@ pub fn run(source: Option<String>) -> Result<()> {
         );
     }
 
-    let scan_meta = ScanMetadata {
+    meta.scan = Some(ScanMetadata {
         scanner: cfg.scanner.scanner.clone(),
         scan_software: cfg.scanner.scan_software.clone(),
         dpi: cfg.scanner.dpi,
         bit_depth: cfg.scanner.bit_depth,
         infrared_cleaning: cfg.scanner.infrared_cleaning,
         multi_sampling: cfg.scanner.multi_sampling,
-    };
-    std::fs::write(
-        target_roll.join("metadata").join("scan.toml"),
-        toml::to_string_pretty(&scan_meta)?,
-    )?;
+    });
+    meta.save(&target_roll)?;
 
     println!("\nDone. {} frame(s) ingested into {}.", tiffs.len(), uid);
 

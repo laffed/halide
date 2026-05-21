@@ -92,6 +92,7 @@ pub fn run() -> Result<()> {
         notes,
         tags,
         frames: vec![],
+        scan: None,
     };
 
     metadata.save(&roll_dir)?;
