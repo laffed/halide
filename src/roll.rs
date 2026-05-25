@@ -43,7 +43,7 @@ pub struct ScanMetadata {
     pub dpi: u32,
     pub bit_depth: u8,
     pub infrared_cleaning: bool,
-    pub multi_sampling: bool,
+    pub samples: u8,
 }
 
 impl RollMetadata {

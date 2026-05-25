@@ -97,9 +97,10 @@ pub fn run() -> Result<()> {
         .with_default(true)
         .prompt()?;
 
-    let multi_sampling = Confirm::new("Multi-sampling?")
-        .with_default(false)
+    let samples_input = Text::new("Samples:")
+        .with_default("1")
         .prompt()?;
+    let samples: u8 = samples_input.trim().parse().unwrap_or(1);
 
     let folder_name = roll::roll_dir_name(&uid, &film, ei);
     let roll_dir = rolls_year_dir.join(&folder_name);
@@ -131,7 +132,7 @@ pub fn run() -> Result<()> {
             dpi,
             bit_depth,
             infrared_cleaning,
-            multi_sampling,
+            samples,
         }),
     };
 

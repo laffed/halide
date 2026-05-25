@@ -122,7 +122,7 @@ scan_software = "VueScan"
 dpi = 4000
 bit_depth = 16
 infrared_cleaning = true
-multi_sampling = false
+samples = 1
 
 [[frames]]
 id = "f01"
