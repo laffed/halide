@@ -6,7 +6,7 @@ use crate::config;
 use crate::roll::{self, RollMetadata, ScanMetadata};
 
 pub fn run() -> Result<()> {
-    let cfg = config::load()?;
+    let mut cfg = config::load()?;
 
     let today = Local::now().date_naive().format("%Y-%m-%d").to_string();
     let date_input = Text::new("Development date (YYYY-MM-DD):")
@@ -31,7 +31,12 @@ pub fn run() -> Result<()> {
     stocks.push("Other...".to_string());
     let film_selection = Select::new("Film stock:", stocks).prompt()?;
     let film = if film_selection == "Other..." {
-        Text::new("Film stock:").prompt()?
+        let custom = Text::new("Film stock:").prompt()?;
+        if !cfg.film_stocks.contains(&custom) {
+            cfg.film_stocks.push(custom.clone());
+            config::save(&cfg)?;
+        }
+        custom
     } else {
         film_selection
     };

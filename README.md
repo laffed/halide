@@ -135,7 +135,7 @@ notes = "strong — print this one"
 
 ## Config
 
-`~/.config/halide/config.toml` — created by `halide init`, edit directly to add film stocks or change defaults.
+`~/.config/halide/config.toml` — created by `halide init`, edit directly to change defaults. Custom film stocks entered via "Other..." during `halide new` are automatically saved to the config and will appear in future prompts.
 
 ## Rules
 
