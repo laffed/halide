@@ -2,7 +2,7 @@ use anyhow::Result;
 use inquire::{Confirm, Text};
 use std::path::PathBuf;
 
-use crate::config::{self, Config, ScannerDefaults, expand_tilde};
+use crate::config::{self, Config, expand_tilde};
 
 pub fn run() -> Result<()> {
     let config_path = config::config_path()?;
@@ -29,34 +29,9 @@ pub fn run() -> Result<()> {
 
     let archive_root = expand_tilde(&archive_input);
 
-    let scanner = Text::new("Scanner name:")
-        .with_default("Coolscan 5000")
-        .prompt()?;
-
-    let scan_software = Text::new("Scan software:")
-        .with_default("VueScan")
-        .prompt()?;
-
-    let dpi_input = Text::new("Default DPI:")
-        .with_default("4000")
-        .prompt()?;
-    let dpi: u32 = dpi_input.parse().unwrap_or(4000);
-
-    let infrared = Confirm::new("Use infrared cleaning by default?")
-        .with_default(true)
-        .prompt()?;
-
     let cfg = Config {
         archive_root: archive_root.clone(),
         editor: std::env::var("EDITOR").ok(),
-        scanner: ScannerDefaults {
-            scanner,
-            scan_software,
-            dpi,
-            bit_depth: 16,
-            infrared_cleaning: infrared,
-            multi_sampling: false,
-        },
         film_stocks: config::default_film_stocks(),
     };
 

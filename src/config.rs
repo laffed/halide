@@ -6,31 +6,7 @@ use std::path::PathBuf;
 pub struct Config {
     pub archive_root: PathBuf,
     pub editor: Option<String>,
-    pub scanner: ScannerDefaults,
     pub film_stocks: Vec<String>,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-pub struct ScannerDefaults {
-    pub scanner: String,
-    pub scan_software: String,
-    pub dpi: u32,
-    pub bit_depth: u8,
-    pub infrared_cleaning: bool,
-    pub multi_sampling: bool,
-}
-
-impl Default for ScannerDefaults {
-    fn default() -> Self {
-        Self {
-            scanner: "Coolscan 5000".to_string(),
-            scan_software: "VueScan".to_string(),
-            dpi: 4000,
-            bit_depth: 16,
-            infrared_cleaning: true,
-            multi_sampling: false,
-        }
-    }
 }
 
 impl Default for Config {
@@ -40,7 +16,6 @@ impl Default for Config {
                 .unwrap_or_else(|| PathBuf::from("~/Pictures"))
                 .join("Film"),
             editor: std::env::var("EDITOR").ok(),
-            scanner: ScannerDefaults::default(),
             film_stocks: default_film_stocks(),
         }
     }

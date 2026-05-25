@@ -1,9 +1,9 @@
 use anyhow::Result;
 use chrono::{Local, NaiveDate};
-use inquire::{Select, Text};
+use inquire::{Confirm, Select, Text};
 
 use crate::config;
-use crate::roll::{self, RollMetadata};
+use crate::roll::{self, RollMetadata, ScanMetadata};
 
 pub fn run() -> Result<()> {
     let cfg = config::load()?;
@@ -68,6 +68,34 @@ pub fn run() -> Result<()> {
         .filter(|s| !s.is_empty())
         .collect();
 
+    println!("\nScanner setup");
+
+    let scanner = Text::new("Scanner:")
+        .with_default("Coolscan 5000")
+        .prompt()?;
+
+    let scan_software = Text::new("Scan software:")
+        .with_default("VueScan")
+        .prompt()?;
+
+    let dpi_input = Text::new("DPI:")
+        .with_default("4000")
+        .prompt()?;
+    let dpi: u32 = dpi_input.trim().parse().unwrap_or(4000);
+
+    let bit_depth_input = Text::new("Bit depth:")
+        .with_default("16")
+        .prompt()?;
+    let bit_depth: u8 = bit_depth_input.trim().parse().unwrap_or(16);
+
+    let infrared_cleaning = Confirm::new("Infrared cleaning?")
+        .with_default(true)
+        .prompt()?;
+
+    let multi_sampling = Confirm::new("Multi-sampling?")
+        .with_default(false)
+        .prompt()?;
+
     let folder_name = roll::roll_dir_name(&uid, &film, ei);
     let roll_dir = rolls_year_dir.join(&folder_name);
 
@@ -92,7 +120,14 @@ pub fn run() -> Result<()> {
         notes,
         tags,
         frames: vec![],
-        scan: None,
+        scan: Some(ScanMetadata {
+            scanner,
+            scan_software,
+            dpi,
+            bit_depth,
+            infrared_cleaning,
+            multi_sampling,
+        }),
     };
 
     metadata.save(&roll_dir)?;

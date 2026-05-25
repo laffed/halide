@@ -58,7 +58,7 @@ Run once after installation:
 halide init
 ```
 
-Prompts for your archive root path and scanner defaults, then creates the top-level directory structure and writes `~/.config/halide/config.toml`.
+Prompts for your archive root path, then creates the top-level directory structure and writes `~/.config/halide/config.toml`.
 
 ## Workflow
 
@@ -68,7 +68,7 @@ Prompts for your archive root path and scanner defaults, then creates the top-le
 halide new
 ```
 
-Prompts for development date, film stock, EI, camera, developer, and notes. Auto-detects the next roll number for the day. Creates the full directory scaffold and `metadata/roll.toml`.
+Prompts for development date, film stock, EI, camera, developer, notes, and scanner setup. Auto-detects the next roll number for the day. Creates the full directory scaffold and `metadata/roll.toml` with all metadata including scan provenance.
 
 ### 2. After scanning — ingest the files
 
@@ -82,7 +82,7 @@ Or run without arguments to be prompted for the source directory:
 halide ingest
 ```
 
-Shows all rolls sorted by empty first, non-empty at the bottom. Moves TIFF files into `raw_scans/` and renames them to the canonical frame format. Writes scanner provenance into `roll.toml`. Handles cross-filesystem moves.
+Shows all rolls sorted by empty first, non-empty at the bottom. Moves TIFF files into `raw_scans/` and renames them to the canonical frame format. Handles cross-filesystem moves.
 
 ### 3. Add metadata and notes
 
