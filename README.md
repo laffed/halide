@@ -30,16 +30,15 @@ A Rust CLI for managing analog film archives. Enforces consistent naming, direct
 ```
 Film/
 ├── Rolls/
-│   └── 2026/
-│       ├── 2026-05-13_01_HP5+@1600/
-│       │   ├── raw_scans/          ← scanner masters, never edited
-│       │   ├── edits/
-│       │   ├── exports/
-│       │   ├── contact_sheet/
-│       │   ├── metadata/
-│       │   │   └── roll.toml       ← source of truth
-│       │   └── notes.md
-│       └── 2026-05-13_02_TriX@800/
+│   ├── 2026-05-13_01_HP5+@1600/
+│   │   ├── raw_scans/          ← scanner masters, never edited
+│   │   ├── edits/
+│   │   ├── exports/
+│   │   ├── contact_sheet/
+│   │   ├── metadata/
+│   │   │   └── roll.toml       ← source of truth
+│   │   └── notes.md
+│   └── 2026-05-13_02_TriX@800/
 ├── Exports/
 └── Projects/
 ```

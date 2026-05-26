@@ -16,9 +16,8 @@ pub fn run() -> Result<()> {
     let dev_date = NaiveDate::parse_from_str(&date_input, "%Y-%m-%d")
         .map_err(|_| anyhow::anyhow!("Invalid date. Use YYYY-MM-DD."))?;
 
-    let year = dev_date.format("%Y").to_string();
-    let rolls_year_dir = cfg.archive_root.join("Rolls").join(&year);
-    let next_n = roll::next_roll_number(&rolls_year_dir, &dev_date);
+    let rolls_dir = cfg.archive_root.join("Rolls");
+    let next_n = roll::next_roll_number(&rolls_dir, &dev_date);
 
     let n_input = Text::new("Roll number:")
         .with_default(&next_n.to_string())
@@ -108,7 +107,7 @@ pub fn run() -> Result<()> {
     let samples: u8 = samples_input.trim().parse().unwrap_or(1);
 
     let folder_name = roll::roll_dir_name(&uid, &film, ei);
-    let roll_dir = rolls_year_dir.join(&folder_name);
+    let roll_dir = rolls_dir.join(&folder_name);
 
     println!("\nCreating {}", folder_name);
 

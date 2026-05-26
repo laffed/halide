@@ -79,16 +79,10 @@ pub fn find_rolls(archive_root: &Path) -> Result<Vec<PathBuf>> {
     }
 
     let mut rolls = vec![];
-    for year_entry in std::fs::read_dir(&rolls_dir)? {
-        let year_entry = year_entry?;
-        if !year_entry.file_type()?.is_dir() {
-            continue;
-        }
-        for roll_entry in std::fs::read_dir(year_entry.path())? {
-            let roll_entry = roll_entry?;
-            if roll_entry.file_type()?.is_dir() {
-                rolls.push(roll_entry.path());
-            }
+    for entry in std::fs::read_dir(&rolls_dir)? {
+        let entry = entry?;
+        if entry.file_type()?.is_dir() {
+            rolls.push(entry.path());
         }
     }
 
