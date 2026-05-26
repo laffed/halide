@@ -106,6 +106,7 @@ Checks all rolls for duplicate UIDs, missing metadata files, and frame sequence 
 
 ```toml
 uid = "2026-05-13_01"
+photographer = "Roark"
 film = "HP5+"
 rated_iso = 1600
 camera = "Leica M3"

@@ -29,10 +29,16 @@ pub fn run() -> Result<()> {
 
     let archive_root = expand_tilde(&archive_input);
 
+    let default_photographer = Text::new("Default photographer:")
+        .with_default("")
+        .prompt()
+        .unwrap_or_default();
+
     let cfg = Config {
         archive_root: archive_root.clone(),
         editor: std::env::var("EDITOR").ok(),
         film_stocks: config::default_film_stocks(),
+        default_photographer,
     };
 
     config::save(&cfg)?;

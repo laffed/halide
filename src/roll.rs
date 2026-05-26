@@ -6,6 +6,8 @@ use std::path::{Path, PathBuf};
 #[derive(Debug, Serialize, Deserialize)]
 pub struct RollMetadata {
     pub uid: String,
+    #[serde(default, skip_serializing_if = "String::is_empty")]
+    pub photographer: String,
     pub film: String,
     pub rated_iso: u32,
     pub camera: String,
@@ -230,6 +232,7 @@ mod tests {
 
         let meta = RollMetadata {
             uid: "2026-05-13_01".to_string(),
+            photographer: "Roark".to_string(),
             film: "HP5+".to_string(),
             rated_iso: 1600,
             camera: "Leica M3".to_string(),

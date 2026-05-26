@@ -27,6 +27,11 @@ pub fn run() -> Result<()> {
 
     let uid = roll::uid_from_date_and_number(dev_date, n);
 
+    let photographer = Text::new("Photographer:")
+        .with_default(&cfg.default_photographer)
+        .prompt()
+        .unwrap_or_default();
+
     let mut stocks = cfg.film_stocks.clone();
     stocks.push("Other...".to_string());
     let film_selection = Select::new("Film stock:", stocks).prompt()?;
@@ -114,6 +119,7 @@ pub fn run() -> Result<()> {
 
     let metadata = RollMetadata {
         uid: uid.clone(),
+        photographer,
         film,
         rated_iso: ei,
         camera,

@@ -7,6 +7,8 @@ pub struct Config {
     pub archive_root: PathBuf,
     pub editor: Option<String>,
     pub film_stocks: Vec<String>,
+    #[serde(default, skip_serializing_if = "String::is_empty")]
+    pub default_photographer: String,
 }
 
 impl Default for Config {
@@ -17,6 +19,7 @@ impl Default for Config {
                 .join("Film"),
             editor: std::env::var("EDITOR").ok(),
             film_stocks: default_film_stocks(),
+            default_photographer: String::new(),
         }
     }
 }
