@@ -55,8 +55,8 @@ pub fn default_film_stocks() -> Vec<String> {
 }
 
 pub fn config_path() -> Result<PathBuf> {
-    let config_dir = dirs::config_dir().context("Could not find config directory")?;
-    Ok(config_dir.join("halide").join("config.toml"))
+    let home = dirs::home_dir().context("Could not find home directory")?;
+    Ok(home.join(".config").join("halide").join("config.toml"))
 }
 
 pub fn load() -> Result<Config> {
