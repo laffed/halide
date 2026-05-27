@@ -31,19 +31,26 @@ pub fn run() -> Result<()> {
         .prompt()
         .unwrap_or_default();
 
-    let mut stocks = cfg.film_stocks.clone();
-    stocks.push("Other...".to_string());
-    let film_selection = Select::new("Film stock:", stocks).prompt()?;
-    let film = if film_selection == "Other..." {
-        let custom = Text::new("Film stock:").prompt()?;
-        if !cfg.film_stocks.contains(&custom) {
-            cfg.film_stocks.push(custom.clone());
-            config::save(&cfg)?;
+    let film = loop {
+        match Select::new("Film stock:", cfg.film_stocks.clone())
+            .with_vim_mode(true)
+            .with_help_message("Esc to enter a custom stock")
+            .prompt_skippable()?
+        {
+            Some(selected) => break selected,
+            None => {
+                let custom = Text::new("Custom film stock:").prompt()?;
+                let custom = custom.trim().to_string();
+                if !custom.is_empty() {
+                    break custom;
+                }
+            }
         }
-        custom
-    } else {
-        film_selection
     };
+
+    cfg.film_stocks.retain(|s| s != &film);
+    cfg.film_stocks.insert(0, film.clone());
+    config::save(&cfg)?;
 
     let ei_input = Text::new("Rated ISO (EI):").prompt()?;
     let ei: u32 = ei_input.trim().parse().unwrap_or(400);
@@ -79,32 +86,39 @@ pub fn run() -> Result<()> {
 
     println!("\nScanner setup");
 
+    let sd = &cfg.scan_defaults;
     let scanner = Text::new("Scanner:")
-        .with_default("Coolscan 5000")
+        .with_default(&sd.scanner)
         .prompt()?;
 
     let scan_software = Text::new("Scan software:")
-        .with_default("VueScan")
+        .with_default(&sd.scan_software)
         .prompt()?;
 
-    let dpi_input = Text::new("DPI:")
-        .with_default("4000")
-        .prompt()?;
-    let dpi: u32 = dpi_input.trim().parse().unwrap_or(4000);
+    let dpi: u32 = Text::new("DPI:")
+        .with_default(&sd.dpi.to_string())
+        .prompt()?
+        .trim()
+        .parse()
+        .unwrap_or(sd.dpi);
 
-    let bit_depth_input = Text::new("Bit depth:")
-        .with_default("16")
-        .prompt()?;
-    let bit_depth: u8 = bit_depth_input.trim().parse().unwrap_or(16);
+    let bit_depth: u8 = Text::new("Bit depth:")
+        .with_default(&sd.bit_depth.to_string())
+        .prompt()?
+        .trim()
+        .parse()
+        .unwrap_or(sd.bit_depth);
 
     let infrared_cleaning = Confirm::new("Infrared cleaning?")
-        .with_default(true)
+        .with_default(sd.infrared_cleaning)
         .prompt()?;
 
-    let samples_input = Text::new("Samples:")
-        .with_default("1")
-        .prompt()?;
-    let samples: u8 = samples_input.trim().parse().unwrap_or(1);
+    let samples: u8 = Text::new("Samples:")
+        .with_default(&sd.samples.to_string())
+        .prompt()?
+        .trim()
+        .parse()
+        .unwrap_or(sd.samples);
 
     let folder_name = roll::roll_dir_name(&uid, &film, ei);
     let roll_dir = rolls_dir.join(&folder_name);

@@ -53,7 +53,7 @@ pub fn run(source: Option<String>) -> Result<()> {
     }
 
     let display: Vec<String> = options.iter().map(|(s, _)| s.clone()).collect();
-    let selected = Select::new("Target roll:", display.clone()).prompt()?;
+    let selected = Select::new("Target roll:", display.clone()).with_vim_mode(true).prompt()?;
     let idx = display.iter().position(|s| s == &selected).unwrap();
     let target_roll = options[idx].1.clone();
 

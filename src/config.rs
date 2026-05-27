@@ -3,12 +3,37 @@ use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 
 #[derive(Debug, Serialize, Deserialize)]
+pub struct ScanDefaults {
+    pub scanner: String,
+    pub scan_software: String,
+    pub dpi: u32,
+    pub bit_depth: u8,
+    pub infrared_cleaning: bool,
+    pub samples: u8,
+}
+
+impl Default for ScanDefaults {
+    fn default() -> Self {
+        Self {
+            scanner: "Coolscan 5000".into(),
+            scan_software: "VueScan".into(),
+            dpi: 4000,
+            bit_depth: 16,
+            infrared_cleaning: true,
+            samples: 1,
+        }
+    }
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Config {
     pub archive_root: PathBuf,
     pub editor: Option<String>,
     pub film_stocks: Vec<String>,
     #[serde(default, skip_serializing_if = "String::is_empty")]
     pub default_photographer: String,
+    #[serde(default)]
+    pub scan_defaults: ScanDefaults,
 }
 
 impl Default for Config {
@@ -20,6 +45,7 @@ impl Default for Config {
             editor: std::env::var("EDITOR").ok(),
             film_stocks: default_film_stocks(),
             default_photographer: String::new(),
+            scan_defaults: ScanDefaults::default(),
         }
     }
 }
