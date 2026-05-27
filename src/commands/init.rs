@@ -1,5 +1,5 @@
 use anyhow::Result;
-use inquire::{Confirm, Text};
+use inquire::{Confirm, Select, Text};
 use std::path::PathBuf;
 
 use crate::config::{self, Config, ScanDefaults, expand_tilde};
@@ -52,13 +52,23 @@ pub fn run() -> Result<()> {
         .trim()
         .parse()
         .unwrap_or(sd.dpi);
-    let bit_depth: u8 = Text::new("Bit depth:")
-        .with_default(&sd.bit_depth.to_string())
-        .prompt()
-        .unwrap_or_default()
-        .trim()
-        .parse()
-        .unwrap_or(sd.bit_depth);
+    let bit_depth = loop {
+        match Select::new("Bit depth:", config::default_bit_depth_options())
+            .with_vim_mode(true)
+            .with_help_message("Esc to enter a custom bit depth")
+            .prompt_skippable()
+            .unwrap_or(None)
+        {
+            Some(selected) => break selected,
+            None => {
+                let custom = Text::new("Custom bit depth:").prompt().unwrap_or_default();
+                let custom = custom.trim().to_string();
+                if !custom.is_empty() {
+                    break custom;
+                }
+            }
+        }
+    };
     let infrared_cleaning = Confirm::new("Infrared cleaning?")
         .with_default(sd.infrared_cleaning)
         .prompt()
@@ -75,6 +85,7 @@ pub fn run() -> Result<()> {
         archive_root: archive_root.clone(),
         editor: std::env::var("EDITOR").ok(),
         film_stocks: config::default_film_stocks(),
+        bit_depth_options: config::default_bit_depth_options(),
         default_photographer,
         scan_defaults: ScanDefaults { scanner, scan_software, dpi, bit_depth, infrared_cleaning, samples },
     };

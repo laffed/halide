@@ -35,8 +35,7 @@ Film/
 │   │   ├── edits/
 │   │   ├── exports/
 │   │   ├── contact_sheet/
-│   │   ├── metadata/
-│   │   │   └── roll.toml       ← source of truth
+│   │   ├── roll.toml           ← source of truth
 │   │   └── notes.md
 │   └── 2026-05-13_02_TriX@800/
 ├── Exports/

@@ -43,21 +43,21 @@ pub struct ScanMetadata {
     pub scanner: String,
     pub scan_software: String,
     pub dpi: u32,
-    pub bit_depth: u8,
+    pub bit_depth: String,
     pub infrared_cleaning: bool,
     pub samples: u8,
 }
 
 impl RollMetadata {
     pub fn load(roll_dir: &Path) -> Result<Self> {
-        let path = roll_dir.join("metadata").join("roll.toml");
+        let path = roll_dir.join("roll.toml");
         let content = std::fs::read_to_string(&path)
             .with_context(|| format!("Could not read {}", path.display()))?;
         toml::from_str(&content).context("Could not parse roll.toml")
     }
 
     pub fn save(&self, roll_dir: &Path) -> Result<()> {
-        let path = roll_dir.join("metadata").join("roll.toml");
+        let path = roll_dir.join("roll.toml");
         std::fs::write(&path, toml::to_string_pretty(self)?)?;
         Ok(())
     }

@@ -102,12 +102,26 @@ pub fn run() -> Result<()> {
         .parse()
         .unwrap_or(sd.dpi);
 
-    let bit_depth: u8 = Text::new("Bit depth:")
-        .with_default(&sd.bit_depth.to_string())
-        .prompt()?
-        .trim()
-        .parse()
-        .unwrap_or(sd.bit_depth);
+    let bit_depth = loop {
+        match Select::new("Bit depth:", cfg.bit_depth_options.clone())
+            .with_vim_mode(true)
+            .with_help_message("Esc to enter a custom bit depth")
+            .prompt_skippable()?
+        {
+            Some(selected) => break selected,
+            None => {
+                let custom = Text::new("Custom bit depth:").prompt()?;
+                let custom = custom.trim().to_string();
+                if !custom.is_empty() {
+                    break custom;
+                }
+            }
+        }
+    };
+
+    cfg.bit_depth_options.retain(|s| s != &bit_depth);
+    cfg.bit_depth_options.insert(0, bit_depth.clone());
+    config::save(&cfg)?;
 
     let infrared_cleaning = Confirm::new("Infrared cleaning?")
         .with_default(sd.infrared_cleaning)
@@ -126,7 +140,7 @@ pub fn run() -> Result<()> {
     println!("\nCreating {}", folder_name);
 
     std::fs::create_dir_all(&roll_dir)?;
-    for subdir in &["raw_scans", "edits", "exports", "contact_sheet", "metadata"] {
+    for subdir in &["raw_scans", "edits", "exports", "contact_sheet"] {
         std::fs::create_dir_all(roll_dir.join(subdir))?;
     }
 

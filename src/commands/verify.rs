@@ -19,10 +19,10 @@ pub fn run() -> Result<()> {
 
     for roll_dir in &all_rolls {
         let name = roll_dir.file_name().unwrap_or_default().to_string_lossy();
-        let toml_path = roll_dir.join("metadata").join("roll.toml");
+        let toml_path = roll_dir.join("roll.toml");
 
         if !toml_path.exists() {
-            println!("[ERROR] {}: missing metadata/roll.toml", name);
+            println!("[ERROR] {}: missing roll.toml", name);
             errors += 1;
             continue;
         }

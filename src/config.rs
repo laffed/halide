@@ -7,7 +7,7 @@ pub struct ScanDefaults {
     pub scanner: String,
     pub scan_software: String,
     pub dpi: u32,
-    pub bit_depth: u8,
+    pub bit_depth: String,
     pub infrared_cleaning: bool,
     pub samples: u8,
 }
@@ -18,7 +18,7 @@ impl Default for ScanDefaults {
             scanner: "Coolscan 5000".into(),
             scan_software: "VueScan".into(),
             dpi: 4000,
-            bit_depth: 16,
+            bit_depth: "16 bit Gray".into(),
             infrared_cleaning: true,
             samples: 1,
         }
@@ -30,6 +30,8 @@ pub struct Config {
     pub archive_root: PathBuf,
     pub editor: Option<String>,
     pub film_stocks: Vec<String>,
+    #[serde(default = "default_bit_depth_options")]
+    pub bit_depth_options: Vec<String>,
     #[serde(default, skip_serializing_if = "String::is_empty")]
     pub default_photographer: String,
     #[serde(default)]
@@ -44,10 +46,22 @@ impl Default for Config {
                 .join("Film"),
             editor: std::env::var("EDITOR").ok(),
             film_stocks: default_film_stocks(),
+            bit_depth_options: default_bit_depth_options(),
             default_photographer: String::new(),
             scan_defaults: ScanDefaults::default(),
         }
     }
+}
+
+pub fn default_bit_depth_options() -> Vec<String> {
+    vec![
+        "1 bit B/W".into(),
+        "8 bit Gray".into(),
+        "16 bit Gray".into(),
+        "24 bit RGB".into(),
+        "48 bit RGB".into(),
+        "64 bit RGBI".into(),
+    ]
 }
 
 pub fn default_film_stocks() -> Vec<String> {
