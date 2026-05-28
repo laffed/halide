@@ -11,7 +11,7 @@ pub struct RollMetadata {
     pub film: String,
     pub rated_iso: u32,
     pub camera: String,
-    #[serde(default, skip_serializing_if = "String::is_empty")]
+    #[serde(default)]
     pub lens: String,
     pub developer: String,
     #[serde(default, skip_serializing_if = "String::is_empty")]
@@ -21,9 +21,9 @@ pub struct RollMetadata {
     pub developed_date: String,
     #[serde(default, skip_serializing_if = "String::is_empty")]
     pub shot_date_range: String,
-    #[serde(default, skip_serializing_if = "String::is_empty")]
+    #[serde(default)]
     pub notes: String,
-    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    #[serde(default)]
     pub tags: Vec<String>,
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub frames: Vec<FrameNote>,

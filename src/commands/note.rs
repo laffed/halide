@@ -1,5 +1,5 @@
 use anyhow::Result;
-use inquire::{Select, Text};
+use inquire::{InquireError, Select, Text};
 use std::path::Path;
 
 use crate::config;
@@ -75,10 +75,14 @@ fn add_frame_notes(roll_dir: &Path) -> Result<()> {
             .map(|f| f.notes.as_str())
             .unwrap_or("");
 
-        let note = Text::new(&format!("Frame {}:", frame_id))
+        let note = match Text::new(&format!("Frame {}:", frame_id))
             .with_default(existing)
             .prompt()
-            .unwrap_or_default();
+        {
+            Ok(n) => n,
+            Err(InquireError::OperationInterrupted | InquireError::OperationCanceled) => break,
+            Err(e) => return Err(e.into()),
+        };
 
         if let Some(frame) = meta.frames.iter_mut().find(|f| f.id == frame_id) {
             frame.notes = note;

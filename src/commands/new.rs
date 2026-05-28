@@ -57,7 +57,7 @@ pub fn run() -> Result<()> {
 
     let camera = Text::new("Camera:").prompt()?;
 
-    let lens = Text::new("Lens (optional):")
+    let lens = Text::new("Lens:")
         .with_default("")
         .prompt()
         .unwrap_or_default();
