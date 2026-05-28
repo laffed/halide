@@ -151,6 +151,32 @@ pub fn get_frame_numbers(roll_dir: &Path, uid: &str) -> Vec<u32> {
     nums
 }
 
+pub fn nonconforming_scans(roll_dir: &Path, uid: &str) -> Vec<String> {
+    let raw_scans = roll_dir.join("raw_scans");
+    let prefix = format!("{}_f", uid);
+    std::fs::read_dir(&raw_scans)
+        .map(|rd| {
+            rd.filter_map(|e| e.ok())
+                .filter_map(|e| {
+                    let name = e.file_name().to_string_lossy().to_string();
+                    if !is_scan_file(&name) {
+                        return None;
+                    }
+                    let num_part = name
+                        .strip_prefix(&prefix)
+                        .and_then(|rest| rest.split('.').next())
+                        .unwrap_or("");
+                    if !num_part.is_empty() && num_part.chars().all(|c| c.is_ascii_digit()) {
+                        None
+                    } else {
+                        Some(name)
+                    }
+                })
+                .collect()
+        })
+        .unwrap_or_default()
+}
+
 pub fn next_roll_number(rolls_year_dir: &Path, date: &NaiveDate) -> u32 {
     let prefix = date.format("%Y-%m-%d").to_string();
     if !rolls_year_dir.exists() {

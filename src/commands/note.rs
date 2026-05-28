@@ -5,7 +5,7 @@ use std::path::Path;
 use crate::config;
 use crate::roll::{self, FrameNote, RollMetadata};
 
-pub fn run() -> Result<()> {
+pub fn run(uid: Option<String>) -> Result<()> {
     let cfg = config::load()?;
 
     let all_rolls = roll::find_rolls(&cfg.archive_root)?;
@@ -18,9 +18,27 @@ pub fn run() -> Result<()> {
         .map(|p| p.file_name().unwrap_or_default().to_string_lossy().to_string())
         .collect();
 
-    let selected = Select::new("Select roll:", roll_names.clone()).with_vim_mode(true).prompt()?;
-    let idx = roll_names.iter().position(|s| s == &selected).unwrap();
-    let roll_dir = &all_rolls[idx];
+    let roll_dir = if let Some(pattern) = uid {
+        let matches: Vec<_> = all_rolls
+            .iter()
+            .zip(roll_names.iter())
+            .filter(|(_, name)| name.contains(&pattern))
+            .collect();
+        match matches.len() {
+            0 => anyhow::bail!("No rolls matching '{}'", pattern),
+            1 => matches[0].0,
+            _ => {
+                let names: Vec<String> = matches.iter().map(|(_, n)| (*n).clone()).collect();
+                let selected = Select::new("Select roll:", names.clone()).with_vim_mode(true).prompt()?;
+                let idx = names.iter().position(|s| s == &selected).unwrap();
+                matches[idx].0
+            }
+        }
+    } else {
+        let selected = Select::new("Select roll:", roll_names.clone()).with_vim_mode(true).prompt()?;
+        let idx = roll_names.iter().position(|s| s == &selected).unwrap();
+        &all_rolls[idx]
+    };
 
     let action = Select::new(
         "Action:",

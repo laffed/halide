@@ -46,6 +46,12 @@ pub fn run() -> Result<()> {
             warnings += 1;
         }
 
+        let bad = roll::nonconforming_scans(roll_dir, &meta.uid);
+        for f in &bad {
+            println!("[WARN]  {}: non-conforming filename in raw_scans: {}", name, f);
+            warnings += 1;
+        }
+
         let frames = roll::get_frame_numbers(roll_dir, &meta.uid);
         if !frames.is_empty() {
             let expected: Vec<u32> = (1..=frames.len() as u32).collect();

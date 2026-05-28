@@ -23,7 +23,10 @@ enum Command {
         source: Option<String>,
     },
     /// Edit roll or frame metadata
-    Note,
+    Note {
+        /// UID or partial match to skip selection
+        uid: Option<String>,
+    },
     /// Verify archive integrity
     Verify,
 }
@@ -35,7 +38,7 @@ fn main() -> anyhow::Result<()> {
         Command::Init => commands::init::run(),
         Command::New => commands::new::run(),
         Command::Ingest { source } => commands::ingest::run(source),
-        Command::Note => commands::note::run(),
+        Command::Note { uid } => commands::note::run(uid),
         Command::Verify => commands::verify::run(),
     }
 }
