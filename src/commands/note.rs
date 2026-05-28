@@ -40,7 +40,7 @@ pub fn run() -> Result<()> {
 }
 
 fn open_in_editor(roll_dir: &Path, cfg_editor: &Option<String>) -> Result<()> {
-    let toml_path = roll_dir.join("metadata").join("roll.toml");
+    let toml_path = roll_dir.join("roll.toml");
     let env_editor = std::env::var("EDITOR").ok();
     let editor = cfg_editor
         .as_deref()

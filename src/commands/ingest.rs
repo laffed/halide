@@ -10,7 +10,7 @@ pub fn run(source: Option<String>) -> Result<()> {
 
     let source_input = match source {
         Some(s) => s,
-        None => Text::new("Source directory (containing TIFF files):").prompt()?,
+        None => Text::new("Source directory (containing TIFF/DNG files):").prompt()?,
     };
     let source_dir = PathBuf::from(&source_input);
 
@@ -110,7 +110,7 @@ fn collect_tiffs(dir: &Path) -> Result<Vec<PathBuf>> {
                 .extension()
                 .map(|e| e.to_string_lossy().to_lowercase())
                 .unwrap_or_default();
-            if ext == "tif" || ext == "tiff" {
+            if ext == "tif" || ext == "tiff" || ext == "dng" {
                 result.push(path);
             }
         }

@@ -98,7 +98,7 @@ pub fn raw_scans_count(roll_dir: &Path) -> usize {
     std::fs::read_dir(&raw_scans)
         .map(|rd| {
             rd.filter_map(|e| e.ok())
-                .filter(|e| is_tiff(&e.file_name().to_string_lossy()))
+                .filter(|e| is_scan_file(&e.file_name().to_string_lossy()))
                 .count()
         })
         .unwrap_or(0)
@@ -115,7 +115,7 @@ pub fn next_frame_number(roll_dir: &Path, uid: &str) -> usize {
             rd.filter_map(|e| e.ok())
                 .filter_map(|e| {
                     let name = e.file_name().to_string_lossy().to_string();
-                    if name.starts_with(&prefix) && is_tiff(&name) {
+                    if name.starts_with(&prefix) && is_scan_file(&name) {
                         let rest = &name[prefix.len()..];
                         rest.split('.').next()?.parse::<usize>().ok()
                     } else {
@@ -137,7 +137,7 @@ pub fn get_frame_numbers(roll_dir: &Path, uid: &str) -> Vec<u32> {
             rd.filter_map(|e| e.ok())
                 .filter_map(|e| {
                     let name = e.file_name().to_string_lossy().to_string();
-                    if name.starts_with(&prefix) && is_tiff(&name) {
+                    if name.starts_with(&prefix) && is_scan_file(&name) {
                         let rest = &name[prefix.len()..];
                         rest.split('.').next()?.parse().ok()
                     } else {
@@ -177,9 +177,9 @@ pub fn next_roll_number(rolls_year_dir: &Path, date: &NaiveDate) -> u32 {
     max + 1
 }
 
-fn is_tiff(name: &str) -> bool {
+fn is_scan_file(name: &str) -> bool {
     let lower = name.to_lowercase();
-    lower.ends_with(".tif") || lower.ends_with(".tiff")
+    lower.ends_with(".tif") || lower.ends_with(".tiff") || lower.ends_with(".dng")
 }
 
 #[cfg(test)]
