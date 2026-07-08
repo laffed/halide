@@ -124,7 +124,7 @@ pub fn run() -> Result<()> {
     config::save(&cfg)?;
 
     let infrared_cleaning = Confirm::new("Infrared cleaning?")
-        .with_default(sd.infrared_cleaning)
+        .with_default(config::is_color_bit_depth(&bit_depth) && sd.infrared_cleaning)
         .prompt()?;
 
     let samples: u8 = Text::new("Samples:")

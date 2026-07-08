@@ -53,6 +53,10 @@ impl Default for Config {
     }
 }
 
+pub fn is_color_bit_depth(bit_depth: &str) -> bool {
+    bit_depth.to_lowercase().contains("rgb")
+}
+
 pub fn default_bit_depth_options() -> Vec<String> {
     vec![
         "1 bit B/W".into(),

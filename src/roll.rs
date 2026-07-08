@@ -6,7 +6,7 @@ use std::path::{Path, PathBuf};
 #[derive(Debug, Serialize, Deserialize)]
 pub struct RollMetadata {
     pub uid: String,
-    #[serde(default, skip_serializing_if = "String::is_empty")]
+    #[serde(default)]
     pub photographer: String,
     pub film: String,
     pub rated_iso: u32,
@@ -14,12 +14,12 @@ pub struct RollMetadata {
     #[serde(default)]
     pub lens: String,
     pub developer: String,
-    #[serde(default, skip_serializing_if = "String::is_empty")]
+    #[serde(default)]
     pub loaded_date: String,
-    #[serde(default, skip_serializing_if = "String::is_empty")]
+    #[serde(default)]
     pub unloaded_date: String,
     pub developed_date: String,
-    #[serde(default, skip_serializing_if = "String::is_empty")]
+    #[serde(default)]
     pub shot_date_range: String,
     #[serde(default)]
     pub notes: String,
@@ -34,7 +34,7 @@ pub struct RollMetadata {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct FrameNote {
     pub id: String,
-    #[serde(default, skip_serializing_if = "String::is_empty")]
+    #[serde(default)]
     pub notes: String,
 }
 

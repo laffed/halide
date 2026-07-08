@@ -69,10 +69,11 @@ pub fn run() -> Result<()> {
             }
         }
     };
+    let infrared_default = config::is_color_bit_depth(&bit_depth) && sd.infrared_cleaning;
     let infrared_cleaning = Confirm::new("Infrared cleaning?")
-        .with_default(sd.infrared_cleaning)
+        .with_default(infrared_default)
         .prompt()
-        .unwrap_or(sd.infrared_cleaning);
+        .unwrap_or(infrared_default);
     let samples: u8 = Text::new("Samples:")
         .with_default(&sd.samples.to_string())
         .prompt()
